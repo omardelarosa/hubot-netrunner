@@ -1,42 +1,42 @@
-# Hubot: hubot-thesimpsons
+# Hubot: hubot-netrunner
 
-A Simpsons Quote and Image Generator for Hubots.
-
-[![Build Status](https://travis-ci.org/jjasghar/hubot-thesimpsons.png?branch=master)](https://travis-ci.org/jjasghar/hubot-thesimpsons)
-
-See [`src/thesimpsons.coffee`](src/thesimpsons.coffee) for full documentation.
+A hubot script for retrieving netrunner card information
 
 ## Installation
 
-Add **hubot-thesimpsons** to your `package.json` file:
+Add **hubot-netrunner** to your `package.json` file:
 
 ```json
 "dependencies": {
   "hubot": ">= 2.5.1",
   "hubot-scripts": ">= 2.4.2",
-  "hubot-thesimpsons": ">= 0.0.0"
+  "hubot-netrunner": ">= 0.0.0"
 }
 ```
 
-Add **hubot-thesimpsons** to your `external-scripts.json`:
+Add **hubot-netrunner** to your `external-scripts.json`:
 
 ```json
-["hubot-thesimpsons"]
+["hubot-netrunner"]
 ```
 
-Run `npm install hubot-thesimpsons`
+Run `npm install hubot-netrunner`
 
-Add **hubot-thesimpsons** to your `external-scripts.json`:
+Add **hubot-netrunner** to your `external-scripts.json`:
 
 ```json
-["hubot-thesimpsons"]
+["hubot-netrunner"]
 ```
 
 ## Sample Interaction
 
 ```
-user1>> hubot simpsons image me
-hubot>> http://i.imgur.com/mKzawbN.png
-user1>> hubot simpsons quote me
-hubot>> "Good thing I drink plenty of… malk?"
+user1>> hubot netrunner stimhack
+hubot>> Stimhack
+  Stimhack initiates a run on any server and gives the Runner 9. It also has the following effect:
+
+External Links
+  This card is the namesake for the fan website Stimhack.com .
+
+http://ancur.wikia.com/wiki/Stimhack
 ```

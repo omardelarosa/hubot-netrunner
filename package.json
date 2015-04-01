@@ -1,0 +1,24 @@
+{
+  "name": "hubot-netrunner",
+  "description": "A hubot script to show Android Netrunner card info",
+  "version": "0.0.1",
+  "author": "Omar Delarosa <thedelarosa@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "hubot",
+    "hubot-scripts"
+  ],
+  "dependencies": {
+    "coffee-script": "~1.6"
+  },
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "mocha": "*",
+    "sinon": "*",
+    "sinon-chai": "*"
+  },
+  "main": "index.coffee",
+  "scripts": {
+    "test": "mocha -R spec --compilers coffee:coffee-script test/netrunner.coffee"
+  }
+}

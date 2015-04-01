@@ -30,7 +30,7 @@ formatResponse = (bodyObj, url) ->
    return text
 
 fetchCard = (msg) ->
-   query = msg.match[0].split(' ').slice(3).join('%20')
+   query = msg.match[0].split(' ').slice(2).join('%20')
    url = "http://ancur.wikia.com/api/v1/Search/List/?query=" + query + "&limit=1&namespaces=0%2C14"
    msg.http(url)
       .get() (err, res, body) ->

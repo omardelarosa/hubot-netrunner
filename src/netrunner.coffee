@@ -5,12 +5,15 @@
 #   None
 #
 # Commands:
-#   hubot netrunner {query} - displays card info from wikia and shows a url
+#   hubot netrunner {query} - responds with card info from wikia and shows a url
+#   hubot nrdb {card_attribute} {query} - responds with card info from netrunner db
+#   hubot nrdb {card_attribute} {query} --list - responds with list of first 10 matches
 #
 # Author:
 #   omardelarosa
 #
 _ = require('lodash')
+util = require('util')
 
 formatResponse = (bodyObj, url) ->
    text = "\n"
@@ -28,6 +31,57 @@ formatResponse = (bodyObj, url) ->
                      text += "\t" + e.text + "\n\n"
    text += url + "\n"
    return text
+
+formatNRDBResponse = (msg, card) ->
+   text = "\n"
+   text += 'Title: ' + card.title + '\n'
+   text += 'Type: ' + card.type + ' - ' + card.subtype + '\n'
+   text += 'Faction: ' + card.faction + '\n'
+   text += 'Set: ' + card.setname + '\n'
+   text += 'Text: ' + card.text.replace(/[\[|\]]/g, ':') + '\n'
+   text += 'NRDBURL: ' + card.url + '\n'
+   text
+   msg.send text
+   if card.imagesrc
+      msg.send 'http://netrunnerdb.com' + card.imagesrc
+   return text
+
+nrdb = (msg) ->
+   matchData = msg.match[0].split(' ')
+   indexOfFlag = matchData.indexOf('--list')
+   if indexOfFlag != -1
+      listTen = true
+      matchData.splice(indexOfFlag, 1)
+   else
+      listTen = false
+   key = matchData[2]
+   query = matchData.slice(3).join(' ')
+   url = 'http://netrunnerdb.com/api/cards/'
+   msg.http(url)
+      .get() (err, res, body) ->
+         if err
+            # console.log err
+            msg.send "Error fetching card data."
+            return
+         else
+            try
+               cardList = JSON.parse(body)
+               lowerCaseQuery = query.toLowerCase()
+               results = _.filter cardList, (card) ->
+                  if card[key] and card[key].toLowerCase().search(lowerCaseQuery) != -1
+                     return true
+                  else
+                     return false
+               if results.length > 0
+                  if listTen
+                     results.slice(0, 10).forEach (card) ->
+                        formatNRDBResponse(msg, card)
+                  else
+                  formatNRDBResponse(msg, results[0])
+               else
+                  msg.send 'No results matched your query "' + key + ': ' + query + '"'
+            catch e
+               msg.send "Error parsing response from NetRunner DB"
 
 fetchCard = (msg) ->
    query = msg.match[0].split(' ').slice(2).join('%20')
@@ -57,8 +111,8 @@ module.exports = (robot) ->
    robot.respond /netrunner (.*)\b/i, (msg) ->
       fetchCard(msg)
    
-   robot.respond /netrunner version\b/i, (msg) ->
-      msg.send require('../package').version
+   robot.respond /nrdb (.*)\b/i, (msg) ->
+      nrdb(msg)
 
    
 

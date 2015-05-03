@@ -7,7 +7,7 @@
 # Commands:
 #   hubot netrunner {query} - responds with card info from wikia and shows a url
 #   hubot nrdb {card_attribute} {query} - responds with card info from netrunner db
-#   hubot nrdb {card_attribute} {query} --list - responds with list of first 10 matches
+#   hubot nrdb {card_attribute} {query} -l - responds with list of first 10 matches
 #
 # Author:
 #   omardelarosa
@@ -32,7 +32,7 @@ formatResponse = (bodyObj, url) ->
    text += url + "\n"
    return text
 
-formatNRDBResponse = (msg, card) ->
+formatNRDBResponse = (msg, card, opts) ->
    text = "\n"
    text += 'Title: ' + card.title + '\n'
    text += 'Type: ' + card.type + ' - ' + card.subtype + '\n'
@@ -41,19 +41,27 @@ formatNRDBResponse = (msg, card) ->
    text += 'Text: ' + card.text.replace(/[\[|\]]/g, ':') + '\n'
    text += 'NRDBURL: ' + card.url + '\n'
    text
-   msg.send text
+   if !opts.noText
+      msg.send text
    if card.imagesrc
       msg.send 'http://netrunnerdb.com' + card.imagesrc
    return text
 
 nrdb = (msg) ->
    matchData = msg.match[0].split(' ')
-   indexOfFlag = matchData.indexOf('--list')
-   if indexOfFlag != -1
+   indexOfListFlag = matchData.indexOf('-l')
+   indexOfNoTextFlag = matchData.indexOf('-n')
+   if indexOfListFlag != -1
       listTen = true
-      matchData.splice(indexOfFlag, 1)
+      matchData.splice(indexOfListFlag, 1)
    else
       listTen = false
+   if indexOfNoTextFlag != -1
+      noText = true
+      matchData.splice(indexOfNoTextFlag, 1)
+   else
+      noText = false
+   opts = { noText: noText, listTen: listTen }
    key = matchData[2]
    query = matchData.slice(3).join(' ')
    url = 'http://netrunnerdb.com/api/cards/'
@@ -73,11 +81,11 @@ nrdb = (msg) ->
                   else
                      return false
                if results.length > 0
-                  if listTen
+                  if opts.listTen
                      results.slice(0, 10).forEach (card) ->
-                        formatNRDBResponse(msg, card)
+                        formatNRDBResponse msg, card, opts
                   else
-                  formatNRDBResponse(msg, results[0])
+                  formatNRDBResponse msg, results[0], opts
                else
                   msg.send 'No results matched your query "' + key + ': ' + query + '"'
             catch e

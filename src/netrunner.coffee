@@ -8,6 +8,7 @@
 #   hubot netrunner {query} - responds with card info from wikia and shows a url
 #   hubot nrdb {card_attribute} {query} - responds with card info from netrunner db
 #   hubot nrdb {card_attribute} {query} -l - responds with list of first 10 matches
+#   hubot nrdb {card_attribute} {query} -n - responds with only card image, no text
 #
 # Author:
 #   omardelarosa
@@ -34,12 +35,12 @@ formatResponse = (bodyObj, url) ->
 
 formatNRDBResponse = (msg, card, opts) ->
    text = "\n"
-   text += 'Title: ' + card.title + '\n'
-   text += 'Type: ' + card.type + ' - ' + card.subtype + '\n'
-   text += 'Faction: ' + card.faction + '\n'
-   text += 'Set: ' + card.setname + '\n'
-   text += 'Text: ' + card.text.replace(/[\[|\]]/g, ':') + '\n'
-   text += 'NRDBURL: ' + card.url + '\n'
+   text += '*Title: *' + card.title + '\n'
+   text += '*Type: *' + card.type + ' - ' + card.subtype + '\n'
+   text += '*Faction*: ' + card.faction + '\n'
+   text += '*Set: *' + card.setname + '\n'
+   text += '*Text: *' + card.text.replace(/[\[|\]]/g, ':').replace(/<strong>/g, '*').replace(/<\/strong>/g, '*') + '\n'
+   text += '*NRDBURL*: ' + card.url + '\n'
    text
    if !opts.noText
       msg.send text

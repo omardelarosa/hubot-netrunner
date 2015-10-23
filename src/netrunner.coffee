@@ -16,6 +16,18 @@
 _ = require('lodash')
 util = require('util')
 
+superscript_mappings =
+  0: '\u2070'
+  1: '\u00B9'
+  2: '\u00B2'
+  3: '\u00B3'
+  4: '\u2074'
+  5: '\u2075'
+  6: '\u2076'
+  7: '\u2077'
+  8: '\u2078'
+  9: '\u2079'
+
 formatResponse = (bodyObj, url) ->
   text = "\n"
   if bodyObj["sections"]
@@ -41,14 +53,28 @@ formatNRDBResponse = (msg, card, opts) ->
   text += '*Set*: ' + card.setname + '\n'
   
   text += '*Text*: ' + card.text
+    # Wrap icons in Slack-friendly colons
     .replace(/[\[|\]]/g, ':')
+    # Lowercase words between colons
     .replace(
       /\:(.*)\:/g,
       (r) ->
         r.replace(/\s/g,'').toLowerCase()
     )
+    # Process superscripts for traces
+    .replace(
+      /<sup>(\d+)<\/sup>/,
+      (match, p1) ->
+        superscript = superscript_mappings[p1]
+        if superscript
+          return superscript
+        else
+          return '^'+p1
+    )
+    # Process strong tags into Slack-friendly asterisks
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'
+
   text += '*NRDBURL*: ' + card.url + '\n'
   if !opts.noText
     msg.send text

@@ -48,7 +48,7 @@ formatResponse = (bodyObj, url) ->
 formatNRDBResponse = (msg, card, opts) ->
   text = "\n"
   text += '*Title*: ' + card.title + '\n'
-  text += '*Faction*: :' + card.faction.toLowercase() + ':\n'
+  text += '*Faction*: :' + card.faction.toLowerCase() + ':\n'
   text += '*Type*: ' + card.type + ' - ' + card.subtype + '\n'
   if card.type == "Agenda"
     text += '*Adv/Pts*: '+ card.advancementcost + '\/' + card.agendapoints +'\n'

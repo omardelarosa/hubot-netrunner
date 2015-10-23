@@ -39,12 +39,17 @@ formatNRDBResponse = (msg, card, opts) ->
   text += '*Type*: ' + card.type + ' - ' + card.subtype + '\n'
   text += '*Faction*: ' + card.faction + '\n'
   text += '*Set*: ' + card.setname + '\n'
+  
   text += '*Text*: ' + card.text
     .replace(/[\[|\]]/g, ':')
+    .replace(
+      /\:(.*)\:/g,
+      (r) ->
+        r.replace(/\s/g,'').toLowerCase()
+    )
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'
   text += '*NRDBURL*: ' + card.url + '\n'
-  text
   if !opts.noText
     msg.send text
   if card.imagesrc
@@ -80,10 +85,10 @@ nrdb = (msg) ->
           cardList = JSON.parse(body)
           lowerCaseQuery = query.toLowerCase()
           results = _.filter cardList, (card) ->
-          if card[key] and card[key].toLowerCase().search(lowerCaseQuery) != -1
-            return true
-          else
-            return false
+            if card[key] and card[key].toLowerCase().search(lowerCaseQuery) != -1
+              return true
+            else
+              return false
           if results.length > 0
             if opts.listTen
               results.slice(0, 10).forEach (card) ->
@@ -93,6 +98,8 @@ nrdb = (msg) ->
           else
             msg.send 'No results matched your query "' + key + ': ' + query + '"'
         catch e
+          # console.log e
+          # console.log e.stack
           msg.send "Error parsing response from NetRunner DB"
 
 fetchCard = (msg) ->
@@ -101,7 +108,7 @@ fetchCard = (msg) ->
   msg.http(url)
     .get() (err, res, body) ->
       if err
-        console.log err
+        # console.log err
         msg.send "Error fetching card data."
         return
       content = JSON.parse(body)
@@ -111,7 +118,7 @@ fetchCard = (msg) ->
         msg.http("http://ancur.wikia.com/api/v1/Articles/AsSimpleJson?id="+id)
           .get() (err, res, body) ->
             if err
-              console.log err
+              # console.log err
               msg.send "Error fetching card data."
               return
             bodyObject = JSON.parse(body)

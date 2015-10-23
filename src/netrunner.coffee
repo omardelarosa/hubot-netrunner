@@ -53,7 +53,7 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Agenda"
     text += '*Adv/Pts*: '+ card.advancementcost + '\/' + card.agendapoints +'\n'
   end
-  if card.type == "ICE" || card.type == "Upgrade || card.type == "Asset"
+  if card.type == "ICE" || card.type == "Upgrade" || card.type == "Asset"
     text += '*Rez Cost*: ' + card.cost + '\n'
     if card.type == "ICE"
       text += '*Strength*: ' + card.strength + '\n'

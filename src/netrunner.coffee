@@ -48,8 +48,29 @@ formatResponse = (bodyObj, url) ->
 formatNRDBResponse = (msg, card, opts) ->
   text = "\n"
   text += '*Title*: ' + card.title + '\n'
+  text += '*Faction*: :' + card.faction.toLowercase() + ':\n'
   text += '*Type*: ' + card.type + ' - ' + card.subtype + '\n'
-  text += '*Faction*: ' + card.faction + '\n'
+  if card.type == "Agenda"
+    text += '*Adv/Pts*: '+ card.advancementcost + '\/' + card.agendapoints +'\n'
+  end
+  if card.type == "ICE" || card.type == "Upgrade || card.type == "Asset"
+    text += '*Rez Cost*: ' + card.cost + '\n'
+    if card.type == "ICE"
+      text += '*Strength*: ' + card.strength + '\n'
+    end
+  end
+  if card.type == "Program" || card.type == "Resource" || card.type == "Hardware"
+    text += '*Install Cost*: ' + card.cost
+    if /Icebreaker/i.test(card.subtype)
+      text += '*Strength*: ' + card.strength + '\n'
+    end
+  end
+  if card.type == "Operation" || card.type == "Event"
+    text += '*Cost*: ' + card.cost + '\n'
+  end
+  if card.factioncost != null || card.factioncost != 0 
+    text += '*Influence*: ' + card.factioncost + '\n'
+  end
   text += '*Set*: ' + card.setname + '\n'
   
   text += '*Text*: ' + card.text

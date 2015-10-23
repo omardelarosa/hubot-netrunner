@@ -49,7 +49,7 @@ formatNRDBResponse = (msg, card, opts) ->
   text = "\n"
   text += "*Title*: #{card.title}\n"
   text += "*Faction*: :#{card.faction.toLowerCase()}:\n"
-  text += "*Type*: #{card.type} - #{card.subtype}\n"
+  text += "*Type*: #{card.type} #{ if card.subtype then (' - ' + card.subtype) else '' }\n"
   if card.type == "Agenda"
     text += "*Adv/Pts*: #{card.advancementcost} \/#{card.agendapoints}\n"
   if card.type == "ICE" || card.type == "Upgrade" || card.type == "Asset"

@@ -48,7 +48,12 @@ formatResponse = (bodyObj, url) ->
 formatNRDBResponse = (msg, card, opts) ->
   text = "\n"
   text += "*Title*: #{card.title}\n"
-  text += "*Faction*: :#{ card.faction.toLowerCase().replace(/\s+/g,'_') }:\n"
+  text += "*Faction*: #{
+    if card.faction == 'Neutral'
+      'Neutral'
+    else ':' + (card.faction.toLowerCase().replace(/\s+/g,'_')) + ':'
+  }\n"
+
   text += "*Type*: #{card.type} #{ if card.subtype then (' - ' + card.subtype) else '' }\n"
   if card.type == "Agenda"
     text += "*Adv/Pts*: #{card.advancementcost} \/#{card.agendapoints}\n"

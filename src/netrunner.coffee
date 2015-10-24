@@ -47,10 +47,33 @@ formatResponse = (bodyObj, url) ->
 
 formatNRDBResponse = (msg, card, opts) ->
   text = "\n"
-  text += '*Title*: ' + card.title + '\n'
-  text += '*Type*: ' + card.type + ' - ' + card.subtype + '\n'
-  text += '*Faction*: ' + card.faction + '\n'
-  text += '*Set*: ' + card.setname + '\n'
+  text += "*Title*: #{card.title}\n"
+  text += "*Faction*: #{
+    if card.faction == 'Neutral'
+      'Neutral'
+    else ':' + (card.faction.toLowerCase().replace(/\s+/g,'_')) + ':'
+  }\n"
+
+  text += "*Type*: #{card.type} #{ if card.subtype then (' - ' + card.subtype) else '' }\n"
+  if card.type == "Agenda"
+    text += "*Adv/Pts*: #{card.advancementcost} \/#{card.agendapoints}\n"
+  if card.type == "ICE" || card.type == "Upgrade" || card.type == "Asset"
+    text += "*Rez Cost*: #{card.cost}\n"
+    if card.type == "ICE"
+      text += "*Strength*: #{card.strength}\n"
+  
+  if card.type == "Program" || card.type == "Resource" || card.type == "Hardware"
+    text += "*Install Cost*: #{card.cost}\n"
+    if /Icebreaker/i.test(card.subtype)
+      text += "*Strength*: #{card.strength}\n"
+  
+  if card.type == "Operation" || card.type == "Event"
+    text += "*Cost*: #{card.cost}\n"
+  
+  if card.factioncost != null || card.factioncost != 0
+    text += "*Influence*: #{card.factioncost}\n"
+  
+  text += "*Set*: #{card.setname}\n"
   
   text += '*Text*: ' + card.text
     # Wrap icons in Slack-friendly colons
@@ -75,7 +98,7 @@ formatNRDBResponse = (msg, card, opts) ->
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'
 
-  text += '*NRDBURL*: ' + card.url + '\n'
+  text += "*NRDBURL*: #{card.url}\n"
   if !opts.noText
     msg.send text
   if card.imagesrc
@@ -124,8 +147,8 @@ nrdb = (msg) ->
           else
             msg.send 'No results matched your query "' + key + ': ' + query + '"'
         catch e
-          # console.log e
-          # console.log e.stack
+          console.log e
+          console.log e.stack
           msg.send "Error parsing response from NetRunner DB"
 
 fetchCard = (msg) ->

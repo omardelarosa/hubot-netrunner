@@ -70,7 +70,7 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Operation" || card.type == "Event"
     text += "*Cost*: #{card.cost}\n"
   
-  if card.factioncost != null || card.factioncost != 0
+  if typeof card.factioncost != 'undefined' || card.factioncost != 0 
     text += "*Influence*: #{card.factioncost}\n"
   
   text += "*Set*: #{card.setname}\n"
@@ -94,6 +94,8 @@ formatNRDBResponse = (msg, card, opts) ->
         else
           return '^'+p1
     )
+   # Replace ":link:" tag with Slack-friendly ":linknr:"
+    .replace(/:link:/g, ":linknr:")
     # Process strong tags into Slack-friendly asterisks
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'

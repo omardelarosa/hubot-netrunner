@@ -73,6 +73,10 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Identity"
     text += "*Minimum Deck Size*: #{card.minimumdecksize}\n"
     text += "*Influence Limit*: #{card.influencelimit}\n"
+
+#add trash costs for assets and upgrades
+  if card.type == "Asset" || card.type == "Upgrade" 
+    text += ":trash: : #{card.trash}\n"
   
   if typeof card.factioncost != 'undefined' || card.factioncost != 0 
     text += "*Influence*: #{card.factioncost}\n"

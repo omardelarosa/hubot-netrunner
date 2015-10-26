@@ -94,6 +94,8 @@ formatNRDBResponse = (msg, card, opts) ->
         else
           return '^'+p1
     )
+        # Replace ":link:" tag with Slack-friendly ":linknr:"
+    .replace(/:link:/g, ":linknr:")
     # Process strong tags into Slack-friendly asterisks
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'

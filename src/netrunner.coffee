@@ -70,6 +70,10 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Operation" || card.type == "Event"
     text += "*Cost*: #{card.cost}\n"
   
+  if card.type == "Identity"
+    text += "*Minimum Deck Size*: #{card.minimumdecksize}\n"
+    text += "*Influence Limit*: #{card.influencelimit}\n"
+  
   if typeof card.factioncost != 'undefined' || card.factioncost != 0 
     text += "*Influence*: #{card.factioncost}\n"
   

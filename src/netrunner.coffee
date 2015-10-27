@@ -75,10 +75,10 @@ formatNRDBResponse = (msg, card, opts) ->
     text += "*Influence Limit*: #{card.influencelimit}\n"
 
 #add trash costs for assets and upgrades
-  if card.type == "Asset" || card.type == "Upgrade" 
+  if card.type == "Asset" || card.type == "Upgrade"
     text += ":trash: : #{card.trash}\n"
   
-  if typeof card.factioncost != 'undefined' and card.factioncost != 0 
+  if typeof card.factioncost != 'undefined' and card.factioncost != 0
     text += "*Influence*: #{card.factioncost}\n"
   
   text += "*Set*: #{card.setname}\n"
@@ -89,11 +89,10 @@ formatNRDBResponse = (msg, card, opts) ->
       /\[([\w\s]*)\]/g,
       (r) ->
         r.replace(/\s/g,'').toLowerCase()
-    
+    )
     # Wrap icons in Slack-friendly colons
     .replace(/[\[|\]]/g, ':')
     
-    )
     # Process superscripts for traces
     .replace(
       /<sup>(\d+)<\/sup>/,

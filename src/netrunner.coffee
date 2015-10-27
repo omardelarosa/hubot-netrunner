@@ -78,7 +78,7 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Asset" || card.type == "Upgrade" 
     text += ":trash: : #{card.trash}\n"
   
-  if typeof card.factioncost != 'undefined' || card.factioncost != 0 
+  if typeof card.factioncost != 'undefined' and card.factioncost != 0 
     text += "*Influence*: #{card.factioncost}\n"
   
   text += "*Set*: #{card.setname}\n"

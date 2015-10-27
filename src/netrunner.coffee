@@ -75,23 +75,24 @@ formatNRDBResponse = (msg, card, opts) ->
     text += "*Influence Limit*: #{card.influencelimit}\n"
 
 #add trash costs for assets and upgrades
-  if card.type == "Asset" || card.type == "Upgrade" 
+  if card.type == "Asset" || card.type == "Upgrade"
     text += ":trash: : #{card.trash}\n"
   
-  if typeof card.factioncost != 'undefined' || card.factioncost != 0 
+  if typeof card.factioncost != 'undefined' and card.factioncost != 0
     text += "*Influence*: #{card.factioncost}\n"
   
   text += "*Set*: #{card.setname}\n"
   
   text += '*Text*: ' + card.text
-    # Wrap icons in Slack-friendly colons
-    .replace(/[\[|\]]/g, ':')
-    # Lowercase words between colons
+    # Lowercase words between brackets and remove spaces
     .replace(
-      /\:(.*)\:/g,
+      /\[([\w\s]*)\]/g,
       (r) ->
         r.replace(/\s/g,'').toLowerCase()
     )
+    # Wrap icons in Slack-friendly colons
+    .replace(/[\[|\]]/g, ':')
+    
     # Process superscripts for traces
     .replace(
       /<sup>(\d+)<\/sup>/,
@@ -104,6 +105,8 @@ formatNRDBResponse = (msg, card, opts) ->
     )
    # Replace ":link:" tag with Slack-friendly ":linknr:"
     .replace(/:link:/g, ":linknr:")
+    # Same for ":sunny:" tag
+    .replace(/:sunny:/g, ":sunnynr:")
     # Process strong tags into Slack-friendly asterisks
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'

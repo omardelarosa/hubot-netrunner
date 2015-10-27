@@ -84,13 +84,15 @@ formatNRDBResponse = (msg, card, opts) ->
   text += "*Set*: #{card.setname}\n"
   
   text += '*Text*: ' + card.text
-    # Wrap icons in Slack-friendly colons
-    .replace(/[\[|\]]/g, ':')
-    # Lowercase words between colons
+    # Lowercase words between brackets and remove spaces
     .replace(
-      /\:(.*)\:/g,
+      /\[([\w\s]*)\]/g,
       (r) ->
         r.replace(/\s/g,'').toLowerCase()
+    
+    # Wrap icons in Slack-friendly colons
+    .replace(/[\[|\]]/g, ':')
+    
     )
     # Process superscripts for traces
     .replace(
@@ -104,6 +106,8 @@ formatNRDBResponse = (msg, card, opts) ->
     )
    # Replace ":link:" tag with Slack-friendly ":linknr:"
     .replace(/:link:/g, ":linknr:")
+    # Same for ":sunny:" tag
+    .replace(/:sunny:/g, ":sunnynr:")
     # Process strong tags into Slack-friendly asterisks
     .replace(/<strong>/g, '*')
     .replace(/<\/strong>/g, '*') + '\n'

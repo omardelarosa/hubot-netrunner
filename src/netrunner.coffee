@@ -9,6 +9,7 @@
 #  hubot nrdb {card_attribute} {query} - responds with card info from netrunner db
 #  hubot nrdb {card_attribute} {query} -l - responds with list of first 10 matches
 #  hubot nrdb {card_attribute} {query} -n - responds with only card image, no text
+#  hubot nrdbq {query | attribute:query [ [OR|AND] attribute2:query2] }
 #
 # Author:
 #  omardelarosa
@@ -167,6 +168,22 @@ nrdb = (msg) ->
           console.log e.stack
           msg.send "Error parsing response from NetRunner DB"
 
+nrdbq = (msg) ->
+  q = msg.match[1]
+  url = "http://netrunner.delarosa.io/search/"
+  concatUrl = "#{url}#{q}"
+  msg.http(concatUrl)
+    .get() (err, res, body) ->
+      if err
+        console.log err
+      content = JSON.parse body
+      if content.length == 0
+        msg.send "No matches found for #{q}"
+      else
+        content.forEach (c) ->
+          formatNRDBResponse(msg, c, {})
+
+
 fetchCard = (msg) ->
   query = msg.match[0].split(' ').slice(2).join('%20')
   url = "http://ancur.wikia.com/api/v1/Search/List/?query=" + query + "&limit=1&namespaces=0%2C14"
@@ -197,3 +214,6 @@ module.exports = (robot) ->
  
   robot.respond /nrdb (.*)\b/i, (msg) ->
     nrdb(msg)
+
+  robot.respond /nrdbq (.*)/i, (msg) ->
+    nrdbq(msg)

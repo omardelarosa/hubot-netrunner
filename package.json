@@ -1,7 +1,7 @@
 {
   "name": "hubot-netrunner",
   "description": "A hubot script to show Android Netrunner card info",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Omar Delarosa <thedelarosa@gmail.com>",
   "license": "MIT",
   "keywords": [

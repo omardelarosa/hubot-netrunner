@@ -73,6 +73,9 @@ formatNRDBResponse = (msg, card, opts) ->
   if card.type == "Identity"
     text += "*Minimum Deck Size*: #{card.minimumdecksize}\n"
     text += "*Influence Limit*: #{card.influencelimit}\n"
+    #add runner base link
+    if card.baselink
+      text += ":linknr: : #{card.baselink}\n"
 
 #add trash costs for assets and upgrades
   if card.type == "Asset" || card.type == "Upgrade"

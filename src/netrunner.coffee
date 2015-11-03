@@ -87,33 +87,34 @@ formatNRDBResponse = (msg, card, opts) ->
   
   text += "*Set*: #{card.setname}\n"
   
-  text += '*Text*: ' + card.text
-    # Lowercase words between brackets and remove spaces
-    .replace(
-      /\[([\w\s]*)\]/g,
-      (r) ->
-        r.replace(/\s/g,'').toLowerCase()
-    )
-    # Wrap icons in Slack-friendly colons
-    .replace(/[\[|\]]/g, ':')
-    
-    # Process superscripts for traces
-    .replace(
-      /<sup>(\d+)<\/sup>/,
-      (match, p1) ->
-        superscript = superscript_mappings[p1]
-        if superscript
-          return superscript
-        else
-          return '^'+p1
-    )
-   # Replace ":link:" tag with Slack-friendly ":linknr:"
-    .replace(/:link:/g, ":linknr:")
-    # Same for ":sunny:" tag
-    .replace(/:sunny:/g, ":sunnynr:")
-    # Process strong tags into Slack-friendly asterisks
-    .replace(/<strong>/g, '*')
-    .replace(/<\/strong>/g, '*') + '\n'
+  if typeof card.text != 'undefined'
+    text += '*Text*: ' + card.text
+      # Lowercase words between brackets and remove spaces
+      .replace(
+        /\[([\w\s]*)\]/g,
+        (r) ->
+          r.replace(/\s/g,'').toLowerCase()
+      )
+      # Wrap icons in Slack-friendly colons
+      .replace(/[\[|\]]/g, ':')
+      
+      # Process superscripts for traces
+      .replace(
+        /<sup>(\d+)<\/sup>/,
+        (match, p1) ->
+          superscript = superscript_mappings[p1]
+          if superscript
+            return superscript
+          else
+           return '^'+p1
+      )
+     # Replace ":link:" tag with Slack-friendly ":linknr:"
+      .replace(/:link:/g, ":linknr:")
+      # Same for ":sunny:" tag
+      .replace(/:sunny_lebeau:/g, ":sunnynr:")
+      # Process strong tags into Slack-friendly asterisks
+      .replace(/<strong>/g, '*')
+      .replace(/<\/strong>/g, '*') + '\n'
 
   text += "*NRDBURL*: #{card.url}\n"
   if !opts.noText
